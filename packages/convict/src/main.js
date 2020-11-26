@@ -559,6 +559,11 @@ const convict = function convict(def, opts) {
     set: function(k, v) {
       v = coerce(k, v, this._schema, this)
       const path = k.split('.')
+      if (['__proto__', 'prototype', 'constructor'].some(function(key) {
+        return path.indexOf(key) !== -1;
+      })) {
+        return this;
+      }
       const childKey = path.pop()
       const parentKey = path.join('.')
       const parent = walk(this._instance, parentKey, true)
